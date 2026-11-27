@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M@S Real Estate</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f5f2;color:#182b38;font-family:Arial,sans-serif}
+header{background:#102b3a;color:white;padding:22px;text-align:center}
+header h1{color:#d7b66b;margin:0}
+nav{display:flex;justify-content:center;gap:20px;padding:15px;background:#173b4d;color:white}
+.hero{padding:55px 20px;text-align:center;background:#e9e3d6}
+.hero h2{font-size:28px}
+button{background:#b8944d;color:white;border:0;border-radius:8px;padding:13px 22px;font-size:16px;cursor:pointer}
+.container{max-width:950px;margin:auto;padding:20px}
+.card{background:white;padding:20px;border-radius:12px;margin:15px 0;box-shadow:0 3px 12px #0001}
+input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:7px;font-size:16px}
+footer{text-align:center;background:#102b3a;color:white;padding:22px;margin-top:35px}
+.gold{color:#b8944d}
+</style>
+</head>
+<body>
+<header>
+<h1>M@S REAL ESTATE</h1>
+<p>منصة العقارات والفرص الاستثمارية</p>
+</header>
+<nav>
+<span>الرئيسية</span>
+<span>العقارات</span>
+<span>إضافة إعلان</span>
+<span>تواصل معنا</span>
+</nav>
+<section class="hero">
+<h2>اعثر على عقارك القادم</h2>
+<p>بيع وشراء وتأجير العقارات بسهولة وأمان</p>
+<button onclick="document.getElementById('add').scrollIntoView({behavior:'smooth'})">أضف إعلانك الآن</button>
+</section>
+<main class="container">
+<h2 class="gold">العقارات المميزة</h2>
+<div id="listings">
+<div class="card">
+<h3>مرحباً بك في M@S Real Estate</h3>
+<p>قريباً ستظهر هنا أحدث العقارات المعروضة للبيع والإيجار.</p>
+</div>
+</div>
+<section class="card" id="add">
+<h2>إضافة إعلان عقاري</h2>
+<form id="propertyForm">
+<input id="title" placeholder="عنوان العقار" required>
+<select id="type">
+<option value="sale">للبيع</option>
+<option value="rent">للإيجار</option>
+</select>
+<input id="price" type="number" placeholder="السعر" required>
+<input id="location" placeholder="المحافظة والمنطقة" required>
+<textarea id="description" placeholder="وصف العقار"></textarea>
+<button type="submit">إضافة الإعلان</button>
+</form>
+<p id="message"></p>
+</section>
+</main>
+<footer>
+<p>M@S Real Estate</p>
+<p>منزلك يبدأ من هنا</p>
+</footer>
+<script>
+document.getElementById('propertyForm').addEventListener('submit',function(e){
+e.preventDefault();
+const title=document.getElementById('title').value;
+const price=document.getElementById('price').value;
+const location=document.getElementById('location').value;
+const description=document.getElementById('description').value;
+const type=document.getElementById('type').value;
+const card=document.createElement('div');
+card.className='card';
+card.innerHTML='<h3></h3><p></p><p></p><p></p>';
+card.children[0].textContent=title;
+card.children[1].textContent=type==='sale'?'للبيع':'للإيجار';
+card.children[2].textContent='السعر: '+price;
+card.children[3].textContent=location+' - '+description;
+document.getElementById('listings').appendChild(card);
+document.getElementById('message').textContent='تمت إضافة الإعلان للمعاينة المحلية.';
+this.reset();
+});
+</script>
+</body>
+</html>
