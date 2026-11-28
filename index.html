@@ -1,90 +1,224 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#102b3a">
 <title>M@S Real Estate</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#f5f5f2;color:#182b38;font-family:Arial,sans-serif}
-header{background:#102b3a;color:white;padding:22px;text-align:center}
-header h1{color:#d7b66b;margin:0}
-nav{display:flex;justify-content:center;gap:20px;padding:15px;background:#173b4d;color:white}
-.hero{padding:55px 20px;text-align:center;background:#e9e3d6}
-.hero h2{font-size:28px}
-button{background:#b8944d;color:white;border:0;border-radius:8px;padding:13px 22px;font-size:16px;cursor:pointer}
-.container{max-width:950px;margin:auto;padding:20px}
-.card{background:white;padding:20px;border-radius:12px;margin:15px 0;box-shadow:0 3px 12px #0001}
-input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:7px;font-size:16px}
-footer{text-align:center;background:#102b3a;color:white;padding:22px;margin-top:35px}
-.gold{color:#b8944d}
+:root{--navy:#102b3a;--navy2:#173b4d;--gold:#b8944d;--bg:#f5f5f2;--ink:#182b38}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif;line-height:1.6}
+header{background:var(--navy);color:white;padding:22px;text-align:center}header h1{color:#d7b66b;margin:0;font-size:27px}
+nav{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;padding:13px;background:var(--navy2);color:white}
+nav a{color:white;text-decoration:none;cursor:pointer}.hero{padding:45px 18px;text-align:center;background:#e9e3d6}.hero h2{font-size:27px;margin:0 0 8px}
+button,.button{background:var(--gold);color:white;border:0;border-radius:8px;padding:12px 18px;font-size:15px;cursor:pointer}
+button.secondary{background:var(--navy2)}button.danger{background:#a33}button:disabled{opacity:.6;cursor:not-allowed}
+.container{max-width:1000px;margin:auto;padding:18px}.gold{color:var(--gold)}
+.card{background:white;padding:18px;border-radius:12px;margin:14px 0;box-shadow:0 3px 12px #0001}
+input,select,textarea{width:100%;padding:12px;margin:7px 0;border:1px solid #ddd;border-radius:7px;font-size:16px;background:white}
+textarea{min-height:90px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.property img{width:100%;height:190px;object-fit:cover;border-radius:9px;background:#eee}.property h3{margin:8px 0}.muted{color:#667}.status{font-size:13px;color:#8a672b}.hidden{display:none!important}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#message,#authMessage{margin:10px 0;font-weight:bold}.ok{color:#187448}.err{color:#a33}.small{font-size:13px;color:#667}
+footer{text-align:center;background:var(--navy);color:white;padding:22px;margin-top:35px}
 </style>
 </head>
 <body>
-<header>
-<h1>M@S REAL ESTATE</h1>
-<p>منصة العقارات والفرص الاستثمارية</p>
-</header>
+<header><h1>M@S REAL ESTATE</h1><p>منصة العقارات والفرص الاستثمارية</p></header>
 <nav>
-<span>الرئيسية</span>
-<span>العقارات</span>
-<span>إضافة إعلان</span>
-<span>تواصل معنا</span>
+<a href="#home">الرئيسية</a><a href="#properties">العقارات</a><a href="#add">إضافة إعلان</a><a href="#account">حسابي</a>
 </nav>
-<section class="hero">
-<h2>اعثر على عقارك القادم</h2>
-<p>بيع وشراء وتأجير العقارات بسهولة وأمان</p>
+<section class="hero" id="home">
+<h2>اعثر على عقارك القادم</h2><p>بيع وشراء وتأجير العقارات بسهولة</p>
 <button onclick="document.getElementById('add').scrollIntoView({behavior:'smooth'})">أضف إعلانك الآن</button>
 </section>
 <main class="container">
-<h2 class="gold">العقارات المميزة</h2>
-<div id="listings">
-<div class="card">
-<h3>مرحباً بك في M@S Real Estate</h3>
-<p>قريباً ستظهر هنا أحدث العقارات المعروضة للبيع والإيجار.</p>
+<section class="card" id="account">
+<h2 class="gold">حساب المستخدم</h2>
+<div id="signedOut">
+<div class="grid">
+<div><h3>إنشاء حساب</h3><input id="signupName" placeholder="الاسم الكامل"><input id="signupPhone" placeholder="رقم الهاتف"><input id="signupEmail" type="email" placeholder="البريد الإلكتروني"><input id="signupPassword" type="password" placeholder="كلمة المرور (6 أحرف على الأقل)"><button id="signupBtn">إنشاء حساب</button></div>
+<div><h3>تسجيل الدخول</h3><input id="loginEmail" type="email" placeholder="البريد الإلكتروني"><input id="loginPassword" type="password" placeholder="كلمة المرور"><button id="loginBtn" class="secondary">دخول</button></div>
 </div>
 </div>
+<div id="signedIn" class="hidden"><p id="userLabel"></p><button id="logoutBtn" class="secondary">تسجيل الخروج</button></div>
+<p id="authMessage"></p>
+<p class="small">قد يطلب منك تأكيد البريد الإلكتروني بعد إنشاء الحساب، حسب إعدادات المشروع.</p>
+</section>
+
+<section id="properties">
+<h2 class="gold">العقارات المتاحة</h2>
+<div class="grid">
+<input id="searchInput" placeholder="ابحث بالعنوان أو المنطقة">
+<select id="filterType"><option value="">كل الإعلانات</option><option value="sale">للبيع</option><option value="rent">للإيجار</option></select>
+</div>
+<div id="listings"><div class="card">جارٍ تحميل العقارات...</div></div>
+</section>
+
 <section class="card" id="add">
 <h2>إضافة إعلان عقاري</h2>
+<p class="small">يجب تسجيل الدخول أولاً. سيظهر الإعلان بعد موافقة الإدارة.</p>
 <form id="propertyForm">
-<input id="title" placeholder="عنوان العقار" required>
-<select id="type">
-<option value="sale">للبيع</option>
-<option value="rent">للإيجار</option>
-</select>
-<input id="price" type="number" placeholder="السعر" required>
-<input id="location" placeholder="المحافظة والمنطقة" required>
+<input id="title" placeholder="عنوان العقار" required maxlength="120">
+<div class="grid">
+<select id="listingType"><option value="sale">للبيع</option><option value="rent">للإيجار</option></select>
+<select id="propertyType"><option value="شقة">شقة</option><option value="منزل">منزل</option><option value="أرض">أرض</option><option value="محل تجاري">محل تجاري</option><option value="مكتب">مكتب</option><option value="فيلا">فيلا</option><option value="أخرى">أخرى</option></select>
+<input id="price" type="number" min="0" step="any" placeholder="السعر" required>
+<select id="currency"><option value="USD">دولار أمريكي</option><option value="SYP">ليرة سورية</option><option value="LBP">ليرة لبنانية</option></select>
+</div>
+<div class="grid"><input id="governorate" placeholder="المحافظة" required><input id="area" placeholder="المنطقة / المدينة" required></div>
+<input id="address" placeholder="العنوان التفصيلي (اختياري)">
+<div class="grid"><input id="bedrooms" type="number" min="0" placeholder="عدد غرف النوم"><input id="bathrooms" type="number" min="0" placeholder="عدد الحمامات"><input id="areaSqm" type="number" min="0" placeholder="المساحة بالمتر المربع"></div>
+<input id="whatsapp" placeholder="رقم واتساب للتواصل (اختياري)">
 <textarea id="description" placeholder="وصف العقار"></textarea>
-<button type="submit">إضافة الإعلان</button>
+<label for="images">صور العقار (اختياري)</label><input id="images" type="file" accept="image/*" multiple>
+<button id="submitProperty" type="submit">إرسال الإعلان للمراجعة</button>
 </form>
 <p id="message"></p>
 </section>
+<section class="card"><h2 class="gold">مفضلاتي</h2><div id="favoritesList" class="muted">سجّل الدخول لعرض مفضلاتك.</div></section>
 </main>
-<footer>
-<p>M@S Real Estate</p>
-<p>منزلك يبدأ من هنا</p>
-</footer>
+<footer><p>M@S Real Estate</p><p>منزلك يبدأ من هنا</p></footer>
 <script>
-document.getElementById('propertyForm').addEventListener('submit',function(e){
-e.preventDefault();
-const title=document.getElementById('title').value;
-const price=document.getElementById('price').value;
-const location=document.getElementById('location').value;
-const description=document.getElementById('description').value;
-const type=document.getElementById('type').value;
-const card=document.createElement('div');
-card.className='card';
-card.innerHTML='<h3></h3><p></p><p></p><p></p>';
-card.children[0].textContent=title;
-card.children[1].textContent=type==='sale'?'للبيع':'للإيجار';
-card.children[2].textContent='السعر: '+price;
-card.children[3].textContent=location+' - '+description;
-document.getElementById('listings').appendChild(card);
-document.getElementById('message').textContent='تمت إضافة الإعلان للمعاينة المحلية.';
-this.reset();
-});
+(() => {
+  const SUPABASE_URL = "https://zefuxcfzbjvweuiwwuvx.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
+  const $ = id => document.getElementById(id);
+  const listings = $("listings");
+  let client = null, currentUser = null, allProperties = [], favoriteIds = new Set();
+
+  function message(id, text, type="") { const el=$(id); el.textContent=text; el.className=type; }
+  function escapeHtml(value) { return String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+  function money(price,currency) { try { return new Intl.NumberFormat("en-US").format(price) + " " + (currency || ""); } catch { return price+" "+(currency||""); } }
+  function ready() {
+    if (!window.supabase?.createClient) { message("authMessage","تعذر تحميل مكتبة Supabase. تحقق من اتصال الإنترنت.","err"); return false; }
+    if (SUPABASE_PUBLISHABLE_KEY.includes("PASTE_")) { message("authMessage","أضف مفتاح Supabase Publishable Key في الكود قبل النشر.","err"); return false; }
+    client = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    return true;
+  }
+  function updateAuthUI() {
+    $("signedOut").classList.toggle("hidden",!!currentUser);
+    $("signedIn").classList.toggle("hidden",!currentUser);
+    $("userLabel").textContent=currentUser ? "تم تسجيل الدخول: "+(currentUser.email||"") : "";
+    if (!currentUser) $("favoritesList").textContent="سجّل الدخول لعرض مفضلاتك.";
+  }
+  async function loadProperties() {
+    if (!client) { listings.innerHTML='<div class="card">يرجى إعداد مفتاح Supabase أولاً.</div>'; return; }
+    listings.innerHTML='<div class="card">جارٍ تحميل العقارات...</div>';
+    const {data,error}=await client.from("properties").select("*").eq("status","approved").order("created_at",{ascending:false});
+    if(error){listings.innerHTML='<div class="card">تعذر تحميل العقارات. '+escapeHtml(error.message)+'</div>';return;}
+    allProperties=data||[]; renderProperties();
+  }
+  function propertyCard(p, showFavorite=true) {
+    const isFav=favoriteIds.has(p.id);
+    const photo=Array.isArray(p.image_urls)&&p.image_urls.length?p.image_urls[0]:"";
+    return `<article class="card property">
+      ${photo?`<img src="${escapeHtml(photo)}" alt="صورة العقار" loading="lazy">`:""}
+      <h3>${escapeHtml(p.title)}</h3>
+      <p>${escapeHtml(p.listing_type==="sale"?"للبيع":"للإيجار")} · ${escapeHtml(p.property_type||"عقار")}</p>
+      <p><b>${escapeHtml(money(p.price,p.currency))}</b></p>
+      <p>${escapeHtml([p.governorate,p.area,p.address].filter(Boolean).join(" - "))}</p>
+      <p>${escapeHtml(p.description||"")}</p>
+      ${p.bedrooms?`<p>غرف النوم: ${escapeHtml(p.bedrooms)}</p>`:""}
+      ${p.area_sqm?`<p>المساحة: ${escapeHtml(p.area_sqm)} م²</p>`:""}
+      ${p.whatsapp?`<a href="https://wa.me/${escapeHtml(String(p.whatsapp).replace(/[^0-9]/g,""))}" target="_blank" rel="noopener">تواصل عبر واتساب</a>`:""}
+      ${showFavorite?`<div class="actions"><button class="secondary" data-fav="${escapeHtml(p.id)}">${isFav?"إزالة من المفضلة":"أضف للمفضلة"}</button></div>`:""}
+    </article>`;
+  }
+  function renderProperties() {
+    const term=$("searchInput").value.trim().toLowerCase(), type=$("filterType").value;
+    const filtered=allProperties.filter(p=>(!type||p.listing_type===type)&&(!term||[p.title,p.governorate,p.area,p.address].some(v=>String(v||"").toLowerCase().includes(term))));
+    listings.innerHTML=filtered.length?filtered.map(p=>propertyCard(p)).join(""):'<div class="card">لا توجد عقارات مطابقة حالياً.</div>';
+  }
+  async function loadFavorites() {
+    if(!currentUser||!client)return;
+    const {data,error}=await client.from("favorites").select("property_id").eq("user_id",currentUser.id);
+    if(error){$("favoritesList").textContent="تعذر تحميل المفضلات: "+error.message;return;}
+    favoriteIds=new Set((data||[]).map(x=>x.property_id)); renderProperties();
+    const favs=allProperties.filter(p=>favoriteIds.has(p.id));
+    $("favoritesList").innerHTML=favs.length?favs.map(p=>propertyCard(p,false)).join(""):"لا توجد عقارات محفوظة في المفضلة بعد.";
+  }
+  async function toggleFavorite(id) {
+    if(!currentUser){message("authMessage","سجّل الدخول أولاً لإضافة المفضلة.","err");$("account").scrollIntoView({behavior:"smooth"});return;}
+    if(favoriteIds.has(id)){
+      const {error}=await client.from("favorites").delete().eq("user_id",currentUser.id).eq("property_id",id);
+      if(error){message("authMessage",error.message,"err");return;}
+      favoriteIds.delete(id);
+    } else {
+      const {error}=await client.from("favorites").insert({user_id:currentUser.id,property_id:id});
+      if(error){message("authMessage",error.message,"err");return;}
+      favoriteIds.add(id);
+    }
+    renderProperties(); loadFavorites();
+  }
+  async function uploadImages(files) {
+    const urls=[];
+    for(const file of files){
+      if(!file.type.startsWith("image/")) throw new Error("الملف المختار ليس صورة.");
+      if(file.size>5*1024*1024) throw new Error("حجم كل صورة يجب ألا يتجاوز 5 ميغابايت.");
+      const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+      const path=currentUser.id+"/"+Date.now()+"_"+Math.random().toString(36).slice(2)+"_"+safeName;
+      const {error}=await client.storage.from("property-images").upload(path,file,{upsert:false,contentType:file.type});
+      if(error) throw error;
+      const {data}=client.storage.from("property-images").getPublicUrl(path);
+      urls.push(data.publicUrl);
+    }
+    return urls;
+  }
+  $("signupBtn").addEventListener("click",async()=>{
+    if(!client)return;
+    const name=$("signupName").value.trim(),email=$("signupEmail").value.trim(),password=$("signupPassword").value,phone=$("signupPhone").value.trim();
+    if(!name||!email||password.length<6){message("authMessage","أدخل الاسم والبريد وكلمة مرور من 6 أحرف على الأقل.","err");return;}
+    message("authMessage","جارٍ إنشاء الحساب...");
+    const {data,error}=await client.auth.signUp({email,password,options:{data:{full_name:name,phone}}});
+    if(error){message("authMessage",error.message,"err");return;}
+    if(data.user){
+      const {error:profileError}=await client.from("profiles").upsert({id:data.user.id,full_name:name,phone,account_type:"user"});
+      if(profileError) console.warn("Profile save:",profileError.message);
+    }
+    message("authMessage",data.session?"تم إنشاء الحساب وتسجيل الدخول.":"تم إنشاء الحساب. افحص بريدك لتأكيده إذا طُلب ذلك.","ok");
+  });
+  $("loginBtn").addEventListener("click",async()=>{
+    if(!client)return;
+    const {data,error}=await client.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
+    if(error){message("authMessage",error.message,"err");return;}
+    currentUser=data.user;updateAuthUI();await loadFavorites();message("authMessage","تم تسجيل الدخول بنجاح.","ok");
+  });
+  $("logoutBtn").addEventListener("click",async()=>{
+    const {error}=await client.auth.signOut();if(error){message("authMessage",error.message,"err");return;}
+    currentUser=null;favoriteIds.clear();updateAuthUI();renderProperties();message("authMessage","تم تسجيل الخروج.","ok");
+  });
+  $("propertyForm").addEventListener("submit",async e=>{
+    e.preventDefault();
+    if(!client)return;
+    if(!currentUser){message("message","يجب تسجيل الدخول قبل إضافة إعلان.","err");$("account").scrollIntoView({behavior:"smooth"});return;}
+    const btn=$("submitProperty");btn.disabled=true;message("message","جارٍ إرسال الإعلان...");
+    try{
+      const imageUrls=await uploadImages(Array.from($("images").files||[]));
+      const row={
+        owner_id:currentUser.id,title:$("title").value.trim(),description:$("description").value.trim(),
+        listing_type:$("listingType").value,property_type:$("propertyType").value,
+        price:Number($("price").value),currency:$("currency").value,
+        governorate:$("governorate").value.trim(),area:$("area").value.trim(),
+        address:$("address").value.trim()||null,
+        bedrooms:$("bedrooms").value?Number($("bedrooms").value):null,
+        bathrooms:$("bathrooms").value?Number($("bathrooms").value):null,
+        area_sqm:$("areaSqm").value?Number($("areaSqm").value):null,
+        whatsapp:$("whatsapp").value.trim()||null,image_urls:imageUrls,status:"pending"
+      };
+      const {error}=await client.from("properties").insert(row);
+      if(error)throw error;
+      $("propertyForm").reset();message("message","تم إرسال إعلانك للمراجعة. سيظهر للزوار بعد موافقة الإدارة.","ok");
+    }catch(err){message("message","لم يتم إرسال الإعلان: "+(err.message||"حدث خطأ غير معروف"),"err");}
+    finally{btn.disabled=false;}
+  });
+  listings.addEventListener("click",e=>{const b=e.target.closest("[data-fav]");if(b)toggleFavorite(b.dataset.fav);});
+  $("searchInput").addEventListener("input",renderProperties);$("filterType").addEventListener("change",renderProperties);
+  if(ready()){
+    client.auth.getSession().then(async({data})=>{currentUser=data.session?.user||null;updateAuthUI();await loadProperties();if(currentUser)await loadFavorites();});
+    client.auth.onAuthStateChange(async(_event,session)=>{currentUser=session?.user||null;updateAuthUI();if(currentUser)await loadFavorites();});
+  }
+})();
 </script>
 </body>
-</html>
+</html
